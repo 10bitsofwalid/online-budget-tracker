@@ -21,7 +21,7 @@ $total = 0;
     <body>
         <h2>Welcome, <?=$_SESSION['name']?></h2>
 
-        <a href="logout.php">Logout</a>
+        <a href="logout.php" class="logout-link">Logout</a>
         <h3>Add expense</h3>
         <form method="post" action="add_expense.php">
             <input type="text" name="title" placeholder="Expense title" required>
@@ -60,4 +60,5 @@ $total = 0;
         <h3>Total expense: <?=$total?> tk</h3>
 
     </body>
+    <script src="assets/js/script.js"></script>
 </html>

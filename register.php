@@ -43,4 +43,5 @@ if ($_POST) {
         </form>
 
     </body>
+    <script src="assets/js/script.js"></script>
 </html>
