@@ -2,12 +2,27 @@
 include 'config/db.php';
 
 if ($_POST) {
-    $users->insertOne([
-        "name" => $_POST['name'],
-        "email" => $_POST['email'],
-        "password" => password_hash($_POST['password'], PASSWORD_DEFAULT)
-    ]);
-    header("Location: login.php");
+    $users = getUsers();
+    $emailExists = false;
+    foreach ($users as $u) {
+        if ($u['email'] === $_POST['email']) {
+            $emailExists = true;
+            break;
+        }
+    }
+    if ($emailExists) {
+        echo "Email already registered.";
+    } else {
+        $newUser = [
+            'id' => count($users) + 1,
+            'name' => $_POST['name'],
+            'email' => $_POST['email'],
+            'password' => password_hash($_POST['password'], PASSWORD_DEFAULT)
+        ];
+        $users[] = $newUser;
+        saveUsers($users);
+        header("Location: login.php");
+    }
 }
 ?>
 

@@ -3,7 +3,7 @@
 require 'vendor/autoload.php';
 
 try {
-    $client = new MongoDB\Client("mongodb://localhost:27017/?directConnection=true");
+    $client = new MongoDB\Client("mongodb+srv://<walid_budget_calc>:<budget_calc_00>@cluster0.4rkxsl8.mongodb.net/");
     $db = $client->test;
     $collection = $db->test_collection;
     

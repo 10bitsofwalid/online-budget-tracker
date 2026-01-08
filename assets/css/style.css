@@ -1,0 +1,27 @@
+body{
+    font-family: Arial;
+    background: white;
+    text-align: center;
+}
+
+form, table, .box{
+    background: white;
+    padding: 20px;
+    margin: 20px auto;
+    width: 320px;
+    border-radius: 8px;
+}
+
+input, select, button{
+    width: 90%;
+    padding: 8px;
+    margin: 6px;
+}
+
+table{
+    width: 80%;
+}
+
+th, td{
+    padding: 8px;
+}

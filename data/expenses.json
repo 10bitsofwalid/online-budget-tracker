@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "user_id": 1,
+        "title": "tour",
+        "amount": 2000,
+        "category": "Food",
+        "date": "2026-01-08"
+    },
+    {
+        "id": 2,
+        "user_id": 1,
+        "title": "bus",
+        "amount": 120,
+        "category": "Transport",
+        "date": "2026-01-08"
+    }
+]

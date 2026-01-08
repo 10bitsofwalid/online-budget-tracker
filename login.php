@@ -1,11 +1,20 @@
 <?php
 
 include 'config/db.php';
+if(isset($_SESSION['user_id'])) header("Location: dashboard.php");
+
 if($_POST){
-    $user = $users->findOne(["email" => $_POST['email']]);
+    $users = getUsers();
+    $user = null;
+    foreach ($users as $u) {
+        if ($u['email'] === $_POST['email']) {
+            $user = $u;
+            break;
+        }
+    }
 
     if($user && password_verify($_POST['password'], $user['password'])){
-        $_SESSION['user_id'] = (string)$user['_id'];
+        $_SESSION['user_id'] = $user['id'];
         $_SESSION['name'] = $user['name'];
         header("Location: dashboard.php");
     }

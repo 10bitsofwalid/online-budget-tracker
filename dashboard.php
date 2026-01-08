@@ -3,7 +3,10 @@
 include 'config/db.php';
 if(!isset($_SESSION['user_id'])) header("Location: login.php");
 
-$data = $expenses->find(["user_id" => $_SESSION['user_id']]);
+$expenses = getExpenses();
+$data = array_filter($expenses, function($e) {
+    return $e['user_id'] == $_SESSION['user_id'];
+});
 $total = 0;
 
 ?>
@@ -46,8 +49,8 @@ $total = 0;
 
             <tr>
                 <td><?=$e['title']?></td>
-                <td><?=$e['amount']?>?></td>
-                <td><?=$e['category'] ?>?></td>
+                <td><?=$e['amount']?></td>
+                <td><?=$e['category'] ?></td>
             </tr>
 
             <?php endforeach; ?>
