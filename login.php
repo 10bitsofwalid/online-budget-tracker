@@ -3,6 +3,7 @@
 include 'config/db.php';
 if(isset($_SESSION['user_id'])) header("Location: dashboard.php");
 
+$error = '';
 if($_POST){
     $users = getUsers();
     $user = null;
@@ -19,7 +20,7 @@ if($_POST){
         header("Location: dashboard.php");
     }
     else{
-        echo "invalid login";
+        $error = "Invalid login credentials.";
     }
 }
 
@@ -34,6 +35,10 @@ if($_POST){
     </head>
     <body>
         <h2>Login</h2>
+
+        <?php if($error): ?>
+            <div class="alert"><?=$error?></div>
+        <?php endif; ?>
 
         <form method="post">
             <input type="email" name="email" placeholder="Email" required>

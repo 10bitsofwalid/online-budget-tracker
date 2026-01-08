@@ -1,6 +1,7 @@
 <?php
 include 'config/db.php';
 
+$error = '';
 if ($_POST) {
     $users = getUsers();
     $emailExists = false;
@@ -11,7 +12,7 @@ if ($_POST) {
         }
     }
     if ($emailExists) {
-        echo "Email already registered.";
+        $error = "Email already registered.";
     } else {
         $newUser = [
             'id' => count($users) + 1,
@@ -34,6 +35,10 @@ if ($_POST) {
     </head>
     <body>
         <h2>Register</h2>
+
+        <?php if($error): ?>
+            <div class="alert"><?=$error?></div>
+        <?php endif; ?>
 
         <form method="post">
             <input type="text" name="name" placeholder="Name" required>

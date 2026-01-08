@@ -1,27 +1,223 @@
-﻿body {
-    font-family: Arial;
-    background: #f4f6f8;
+﻿/* CSS Variables & Theme Definitions */
+:root {
+    /* Purpleish Dark Theme (Default) */
+    --bg-color: #0f0c29;
+    --surface-color: #1a1a2e;
+    /* slightly lighter purple/slate */
+    --text-color: #eaeaea;
+    --text-muted: #a0a0b0;
+    --primary-color: #6c63ff;
+    /* Vibrant Purple */
+    --primary-hover: #5a52d5;
+    --border-color: #2e2e4d;
+    --input-bg: #252540;
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.15);
+    --radius-md: 12px;
+    --transition-speed: 0.3s;
+}
+
+[data-theme="light"] {
+    /* Light Theme */
+    --bg-color: #f3f4f6;
+    --surface-color: #ffffff;
+    --text-color: #1f2937;
+    --text-muted: #6b7280;
+    --primary-color: #7c3aed;
+    --primary-hover: #6d28d9;
+    --border-color: #e5e7eb;
+    --input-bg: #f9fafb;
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Global Reset & Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+h2,
+h3 {
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+
+.logout-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.logout-link:hover {
+    color: var(--text-color);
+}
+
+/* Container / Box Styles */
+.box,
+form,
+table {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 30px;
+    transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+/* Form Elements */
+input,
+select {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-color);
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+}
+
+button,
+.nav-button {
+    display: inline-block;
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
     text-align: center;
 }
 
-form, table, .box {
-    background: white;
-    padding: 20px;
-    margin: 20px auto;
-    width: 320px;
-    border-radius: 8px;
+button:hover,
+.nav-button:hover {
+    background-color: var(--primary-hover);
+    color: white;
 }
 
-input, select, button {
-    width: 90%;
-    padding: 8px;
-    margin: 6px;
+button:active,
+.nav-button:active {
+    transform: translateY(1px);
 }
 
+.nav-button {
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+/* Table Styles */
 table {
-    width: 80%;
+    width: 100%;
+    max-width: 800px;
+    /* Wider for tables */
+    border-collapse: collapse;
+    overflow: hidden;
+    /* For rounded corners */
 }
 
-th, td {
-    padding: 8px;
+th,
+td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background-color: rgba(108, 99, 255, 0.1);
+    /* Slight tint of primary */
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.alert {
+    background-color: #ef4444;
+    /* Red-500 */
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Theme Toggle Button (Injected via JS) */
+.theme-toggle {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    background-color: var(--bg-color);
 }
