@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit Expense</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <h2>Edit Expense</h2>
+
+    <div id="error-message" class="alert" style="display: none;"></div>
+
+    <form id="edit-form" onsubmit="handleEditSubmit(event)">
+        <input type="text" name="title" placeholder="Expense title" required>
+        <input type="number" name="amount" placeholder="Amount" step="0.01" required>
+        <input type="date" name="date" required>
+        <select name="category">
+            <option>Food</option>
+            <option>Transport</option>
+            <option>Shopping</option>
+            <option>Others</option>
+        </select>
+        <button type="submit">Update</button>
+        <a href="dashboard.html" class="nav-button"
+            style="display:block; margin-top:10px; background-color: #6b7280; color:white; text-align: center; padding: 10px; text-decoration: none; border-radius: 4px;">Cancel</a>
+    </form>
+
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+        // Load expense data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadEditExpense();
+        });
+    </script>
+</body>
+
+</html>

@@ -88,8 +88,9 @@ document.addEventListener('DOMContentLoaded', function () {
         constructor() {
             this.x = Math.random() * width;
             this.y = Math.random() * height;
-            this.vx = (Math.random() - 0.5) * 0.5;
-            this.vy = (Math.random() - 0.5) * 0.5;
+            // SLOWER SPEED: Reduced multiplier from 0.5 to 0.15
+            this.vx = (Math.random() - 0.5) * 0.15;
+            this.vy = (Math.random() - 0.5) * 0.15;
             this.size = Math.random() * 2 + 1;
         }
         update() {
@@ -98,24 +99,30 @@ document.addEventListener('DOMContentLoaded', function () {
             if (this.x < 0 || this.x > width) this.vx *= -1;
             if (this.y < 0 || this.y > height) this.vy *= -1;
 
-            // Mouse interaction
+            // Mouse interaction - smoothed
             if (mouse.x != null) {
                 let dx = mouse.x - this.x;
                 let dy = mouse.y - this.y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < 150) {
+                if (distance < 120) {
                     const forceDirectionX = dx / distance;
                     const forceDirectionY = dy / distance;
-                    const force = (150 - distance) / 150;
-                    const directionX = forceDirectionX * force * 0.5;
-                    const directionY = forceDirectionY * force * 0.5;
-                    this.vx -= directionX; // Move away slightly or towards? Let's connect mostly. 
-                    this.vy -= directionY;
-                    // Let's make them attract slightly for "interactive" feel
-                    this.x += dx * 0.02;
-                    this.y += dy * 0.02;
+                    const force = (120 - distance) / 120;
+                    // Gentler push/pull forces
+                    const directionX = forceDirectionX * force * 0.05;
+                    const directionY = forceDirectionY * force * 0.05;
+
+                    this.vx += directionX;
+                    this.vy += directionY;
                 }
             }
+            // Friction to keep them from getting too fast over time
+            this.vx *= 0.99;
+            this.vy *= 0.99;
+
+            // Minimum movement to keep them alive
+            if (Math.abs(this.vx) < 0.05) this.vx += (Math.random() - 0.5) * 0.01;
+            if (Math.abs(this.vy) < 0.05) this.vy += (Math.random() - 0.5) * 0.01;
         }
         draw(color) {
             ctx.fillStyle = color;

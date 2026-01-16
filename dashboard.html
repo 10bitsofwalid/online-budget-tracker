@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <h2 id="welcome-msg">Welcome, User!</h2>
+
+    <a href="#" onclick="logout(); return false;" class="logout-link">Logout</a>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+        <div class="box" style="flex: 1; min-width: 300px;">
+            <h3>Add expense</h3>
+            <form id="add-expense-form" onsubmit="addExpense(event)"
+                style="box-shadow: none; padding: 0; border: none; margin-bottom: 0;">
+                <input type="text" name="title" placeholder="Expense title" required>
+                <input type="number" name="amount" placeholder="Amount" step="0.01" required>
+                <input type="date" name="date" required title="Select exact date">
+                <select name="category">
+                    <option>Food</option>
+                    <option>Transport</option>
+                    <option>Shopping</option>
+                    <option>Others</option>
+                </select>
+                <button type="submit">Add</button>
+            </form>
+        </div>
+
+        <div class="chart-container" style="flex: 1; min-width: 300px;">
+            <canvas id="expenseChart"></canvas>
+        </div>
+    </div>
+
+    <h3>Expense list</h3>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+    </table>
+
+    <h3 id="total-expense">Total expense: 0 tk</h3>
+
+    <div id="monthly-box" class="box" style="margin-top: 20px; display: none;">
+        <h3>Monthly Breakdown</h3>
+        <ul id="monthly-breakdown"></ul>
+    </div>
+
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+        // Initialize dashboard on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboard();
+            // Set today's date as default
+            const dateInput = document.querySelector('input[name="date"]');
+            if (dateInput) {
+                dateInput.value = new Date().toISOString().split('T')[0];
+            }
+        });
+    </script>
+</body>
+
+</html>

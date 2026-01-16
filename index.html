@@ -53,12 +53,22 @@
             budget tracker.</p>
 
         <div class="hero-buttons">
-            <a href="register.php" class="btn-primary-lg">Get Started</a>
-            <a href="login.php" class="btn-secondary-lg">Login</a>
+            <a href="register.html" class="btn-primary-lg">Get Started</a>
+            <a href="login.html" class="btn-secondary-lg">Login</a>
         </div>
     </div>
 
     <script src="assets/js/script.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+        // Check if already logged in, redirect to dashboard
+        (async () => {
+            const session = await checkSession();
+            if (session.loggedIn) {
+                window.location.href = 'dashboard.html';
+            }
+        })();
+    </script>
 </body>
 
 </html>
