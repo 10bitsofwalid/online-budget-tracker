@@ -337,3 +337,77 @@ select:focus {
 .hero-buttons {
     animation-delay: 0.3s;
 }
+
+#bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.hero {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-decorations {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.decor-item {
+    position: absolute;
+    opacity: 0.15;
+    fill: var(--primary-color);
+    transition: transform 0.1s ease-out;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.decor-item:nth-child(1) {
+    top: 10%;
+    left: 10%;
+    width: 60px;
+    height: 60px;
+}
+
+.decor-item:nth-child(2) {
+    top: 20%;
+    right: 15%;
+    width: 80px;
+    height: 80px;
+}
+
+.decor-item:nth-child(3) {
+    bottom: 15%;
+    left: 20%;
+    width: 50px;
+    height: 50px;
+}
+
+.decor-item:nth-child(4) {
+    bottom: 25%;
+    right: 10%;
+    width: 70px;
+    height: 70px;
+}
+
+.decor-item:nth-child(5) {
+    top: 40%;
+    left: 80%;
+    width: 40px;
+    height: 40px;
+}
+
+[data-theme="light"] .decor-item {
+    opacity: 0.1;
+    fill: var(--primary-color);
+}
