@@ -29,24 +29,27 @@ if ($_POST) {
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Register</title>
-        <link rel="stylesheet" href="assets/css/style.css">
-    </head>
-    <body>
-        <h2>Register</h2>
 
-        <?php if($error): ?>
-            <div class="alert"><?=$error?></div>
-        <?php endif; ?>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
 
-        <form method="post">
-            <input type="text" name="name" placeholder="Name" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button>Register</button>
-        </form>
+<body>
+    <h2>Register</h2>
 
-    </body>
-    <script src="assets/js/script.js"></script>
+    <?php if ($error): ?>
+        <div class="alert"><?= $error ?></div>
+    <?php endif; ?>
+
+    <form method="post">
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button>Register</button>
+    </form>
+
+</body>
+<script src="assets/js/script.js"></script>
+
 </html>
