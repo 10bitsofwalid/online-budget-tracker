@@ -2,6 +2,7 @@
   "name": "budget-tracker",
   "version": "1.0.0",
   "scripts": {
+    "build": "echo 'Local build not required for static files'",
     "dev": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
