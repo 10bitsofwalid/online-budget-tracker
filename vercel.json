@@ -3,12 +3,12 @@
     "cleanUrls": true,
     "rewrites": [
         {
-            "source": "/api/auth.js",
-            "destination": "/api/auth.js"
+            "source": "/api/(.*)",
+            "destination": "/api/$1.js"
         },
         {
-            "source": "/api/expenses.js",
-            "destination": "/api/expenses.js"
+            "source": "/(.*)",
+            "destination": "/$1"
         }
     ]
 }
