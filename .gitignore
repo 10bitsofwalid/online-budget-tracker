@@ -3,5 +3,4 @@ composer.lock
 composer.json
 .dll
 node_modules
-.vercel
 .env
