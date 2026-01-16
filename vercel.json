@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/auth.php",
+      "destination": "/api/auth"
+    },
+    {
+      "source": "/api/expenses.php",
+      "destination": "/api/expenses"
+    }
+  ]
+}

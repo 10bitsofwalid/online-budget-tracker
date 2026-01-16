@@ -34,9 +34,21 @@
             if (res.ok) {
                 window.location.href = 'dashboard.html';
             } else {
-                const data = await res.json();
+                let errorMessage = 'Login failed';
+                try {
+                    const data = await res.json();
+                    if (typeof data.error === 'string') {
+                        errorMessage = data.error;
+                    } else if (typeof data.message === 'string') {
+                        errorMessage = data.message;
+                    } else if (data.error && typeof data.error === 'object') {
+                        errorMessage = JSON.stringify(data.error);
+                    }
+                } catch (e) {
+                    errorMessage = `Error: ${res.status} ${res.statusText}`;
+                }
                 const errorDiv = document.getElementById('error-message');
-                errorDiv.textContent = data.error || 'Login failed';
+                errorDiv.textContent = errorMessage;
                 errorDiv.style.display = 'block';
             }
         });
