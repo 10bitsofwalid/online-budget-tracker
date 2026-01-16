@@ -7,20 +7,22 @@
 </head>
 
 <body>
-    <h2>Register</h2>
+    <div class="page-container">
+        <h2>Register</h2>
 
-    <div id="error-message" class="alert" style="display: none;"></div>
+        <div id="error-message" class="alert" style="display: none;"></div>
 
-    <form id="register-form">
-        <input type="text" id="name" name="name" placeholder="Name" required>
-        <input type="email" id="email" name="email" placeholder="Email" required>
-        <input type="password" id="password" name="password" placeholder="Password" required>
-        <button type="submit">Register</button>
-    </form>
+        <form id="register-form">
+            <input type="text" id="name" name="name" placeholder="Name" required>
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <button type="submit">Register</button>
+        </form>
 
-    <p style="text-align: center; margin-top: 20px;">
-        Already have an account? <a href="login.html">Login here</a>
-    </p>
+        <p style="text-align: center; margin-top: 20px;">
+            Already have an account? <a href="login.html">Login here</a>
+        </p>
+    </div>
 
     <script src="assets/js/script.js"></script>
     <script src="assets/js/app.js"></script>
@@ -32,8 +34,10 @@
             const password = document.getElementById('password').value;
             const res = await register(name, email, password);
             if (res.ok) {
-                alert('Registration successful! Please login.');
-                window.location.href = 'login.html';
+                showToast('Registration successful! Redirecting to login...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
             } else {
                 const data = await res.json();
                 const errorDiv = document.getElementById('error-message');

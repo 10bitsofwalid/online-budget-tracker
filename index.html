@@ -9,26 +9,22 @@
 <body>
 
     <div class="hero-decorations">
-        <!-- Coin/Currency -->
         <svg class="decor-item" viewBox="0 0 24 24" fill="currentColor">
             <circle cx="12" cy="12" r="10"></circle>
             <path d="M12 6v12M12 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2z"
                 stroke="var(--bg-color)" stroke-width="2" />
         </svg>
 
-        <!-- Chart -->
         <svg class="decor-item" viewBox="0 0 24 24" fill="currentColor">
             <path d="M3 3v18h18" stroke="currentColor" stroke-width="2" fill="none" />
             <path d="M18 9l-5 5-4-4-3 3" stroke="currentColor" stroke-width="2" fill="none" />
         </svg>
 
-        <!-- Wallet/Card -->
         <svg class="decor-item" viewBox="0 0 24 24" fill="currentColor">
             <rect x="2" y="5" width="20" height="14" rx="2" fill="currentColor" fill-opacity="0.5" />
             <line x1="2" y1="10" x2="22" y2="10" stroke="var(--bg-color)" stroke-width="2" />
         </svg>
 
-        <!-- Calculator -->
         <svg class="decor-item" viewBox="0 0 24 24" fill="currentColor">
             <rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" stroke-width="2" fill="none" />
             <line x1="8" y1="6" x2="16" y2="6" stroke="currentColor" stroke-width="2" />
@@ -40,7 +36,6 @@
             <line x1="16" y1="18" x2="16.01" y2="18" stroke="currentColor" stroke-width="2" />
         </svg>
 
-        <!-- Pie Chart -->
         <svg class="decor-item" viewBox="0 0 24 24" fill="currentColor">
             <path d="M21.21 15.89A10 10 0 1 1 8 2.83" stroke="currentColor" stroke-width="2" fill="none" />
             <path d="M22 12A10 10 0 0 0 12 2v10z" fill="currentColor" fill-opacity="0.5" />
@@ -48,7 +43,12 @@
     </div>
 
     <div class="hero">
-        <h1>Master Your Budget,<br>Control Your Future</h1>
+        <div style="margin-bottom: 30px;">
+            <h1 class="project-title">
+                Expense Tracker
+            </h1>
+        </div>
+        <h1 style="font-size: 3rem; margin-top: 0;">Master Your Budget,<br>Control Your Future</h1>
         <p>Track expenses, visualize your spending, and achieve your financial goals with our intuitive and modern
             budget tracker.</p>
 
@@ -58,10 +58,72 @@
         </div>
     </div>
 
+    <style>
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #6c63ff 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite, fadeInScale 0.8s ease-out;
+            display: inline-block;
+            position: relative;
+        }
+
+        .project-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #6c63ff, transparent);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                filter: hue-rotate(0deg) brightness(1);
+            }
+
+            50% {
+                filter: hue-rotate(10deg) brightness(1.1);
+            }
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shimmer {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+    </style>
+
     <script src="assets/js/script.js"></script>
     <script src="assets/js/app.js"></script>
     <script>
-        // Check if already logged in, redirect to dashboard
         (async () => {
             const session = await checkSession();
             if (session.loggedIn) {

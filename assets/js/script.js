@@ -38,8 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // --- Interactive Background & Decorations ---
-
     const canvas = document.createElement('canvas');
     canvas.id = 'bg-canvas';
     document.body.prepend(canvas);
@@ -48,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let width, height;
     let particles = [];
 
-    // Resize handling
     function resize() {
         width = window.innerWidth;
         height = window.innerHeight;
@@ -58,37 +55,30 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     window.addEventListener('resize', resize);
 
-    // Mouse tracking
     let mouse = { x: null, y: null };
     window.addEventListener('mousemove', (e) => {
         mouse.x = e.x;
         mouse.y = e.y;
 
-        // Parallax for decorations (Welcome Page)
         updateParallax(e.x, e.y);
     });
     window.addEventListener('mouseout', () => {
         mouse.x = null;
         mouse.y = null;
     });
-
-    // Parallax Logic
     function updateParallax(mx, my) {
         const decorations = document.querySelectorAll('.decor-item');
         decorations.forEach((decor, index) => {
             const speed = (index + 1) * 2;
-            const x = (window.innerWidth / 2 - mx) * speed / 100; // Move relative to center
+            const x = (window.innerWidth / 2 - mx) * speed / 100;
             const y = (window.innerHeight / 2 - my) * speed / 100;
             decor.style.transform = `translate(${x}px, ${y}px)`;
         });
     }
-
-    // Particle Class
     class Particle {
         constructor() {
             this.x = Math.random() * width;
             this.y = Math.random() * height;
-            // SLOWER SPEED: Reduced multiplier from 0.5 to 0.15
             this.vx = (Math.random() - 0.5) * 0.15;
             this.vy = (Math.random() - 0.5) * 0.15;
             this.size = Math.random() * 2 + 1;
@@ -98,8 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
             this.y += this.vy;
             if (this.x < 0 || this.x > width) this.vx *= -1;
             if (this.y < 0 || this.y > height) this.vy *= -1;
-
-            // Mouse interaction - smoothed
             if (mouse.x != null) {
                 let dx = mouse.x - this.x;
                 let dy = mouse.y - this.y;
@@ -108,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     const forceDirectionX = dx / distance;
                     const forceDirectionY = dy / distance;
                     const force = (120 - distance) / 120;
-                    // Gentler push/pull forces
                     const directionX = forceDirectionX * force * 0.05;
                     const directionY = forceDirectionY * force * 0.05;
 
@@ -116,11 +103,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     this.vy += directionY;
                 }
             }
-            // Friction to keep them from getting too fast over time
             this.vx *= 0.99;
             this.vy *= 0.99;
-
-            // Minimum movement to keep them alive
             if (Math.abs(this.vx) < 0.05) this.vx += (Math.random() - 0.5) * 0.01;
             if (Math.abs(this.vy) < 0.05) this.vy += (Math.random() - 0.5) * 0.01;
         }
@@ -143,8 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function animate() {
         ctx.clearRect(0, 0, width, height);
-
-        // Get dynamic color from CSS variable
         const primaryColor = getComputedStyle(html).getPropertyValue('--primary-color').trim();
 
         particles.forEach(p => {
@@ -163,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let dy = particles[a].y - particles[b].y;
                 let distance = dx * dx + dy * dy;
 
-                if (distance < 150 * 150) { // connection distance
+                if (distance < 150 * 150) {
                     ctx.strokeStyle = color;
                     ctx.lineWidth = 1;
                     ctx.globalAlpha = 1 - (distance / (150 * 150));

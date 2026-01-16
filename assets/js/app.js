@@ -1,10 +1,78 @@
 const API_BASE = 'api';
 
+function showModal(title, message, onConfirm, onCancel = null) {
+    const existingModal = document.querySelector('.modal-overlay');
+    if (existingModal) existingModal.remove();
+
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">${title}</div>
+            <div class="modal-body">${message}</div>
+            <div class="modal-buttons">
+                ${onCancel ? '<button class="modal-btn modal-btn-secondary" id="modal-cancel">Cancel</button>' : ''}
+                <button class="modal-btn modal-btn-primary" id="modal-confirm">OK</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    setTimeout(() => modal.classList.add('active'), 10);
+
+    document.getElementById('modal-confirm').addEventListener('click', () => {
+        modal.classList.remove('active');
+        setTimeout(() => modal.remove(), 300);
+        if (onConfirm) onConfirm();
+    });
+
+    if (onCancel) {
+        document.getElementById('modal-cancel').addEventListener('click', () => {
+            modal.classList.remove('active');
+            setTimeout(() => modal.remove(), 300);
+            onCancel();
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+                onCancel();
+            }
+        });
+    } else {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+            }
+        });
+    }
+}
+
+function showToast(message, type = 'info', duration = 3000) {
+    const existingToast = document.querySelector('.toast-notification');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${type}`;
+    toast.innerHTML = `<div class="toast-content">${message}</div>`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.add('active'), 10);
+
+    setTimeout(() => {
+        toast.classList.remove('active');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
+
+
 async function checkSession() {
     try {
         const res = await fetch(`${API_BASE}/auth.php?action=check`);
         const data = await res.json();
-        return data; // { loggedIn: true/false, user: {...} }
+        return data;
     } catch (e) {
         return { loggedIn: false };
     }
@@ -89,7 +157,7 @@ function renderExpenses(expenses) {
             <td>${e.date}</td>
             <td>
                 <a href="edit_expense.html?id=${e.id}" class="action-btn btn-edit">Edit</a>
-                <button onclick="deleteExpense('${e.id}')" class="action-btn btn-delete">Delete</button>
+                <a href="#" onclick="deleteExpense('${e.id}'); return false;" class="action-btn btn-delete">Delete</a>
             </td>
         `;
         table.appendChild(row);
@@ -189,15 +257,25 @@ async function addExpense(e) {
 }
 
 async function deleteExpense(id) {
-    if (!confirm('Are you sure you want to delete this expense?')) return;
-
-    const res = await fetch(`${API_BASE}/expenses.php?id=${id}`, { method: 'DELETE' });
-    if (res.ok) {
-        loadDashboard();
-    } else {
-        alert('Failed to delete');
-    }
+    showModal(
+        'Delete Expense',
+        'Are you sure you want to delete this expense?',
+        async () => {
+            // User confirmed
+            const res = await fetch(`${API_BASE}/expenses.php?id=${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                showToast('Expense deleted successfully', 'success');
+                loadDashboard();
+            } else {
+                showToast('Failed to delete expense', 'error');
+            }
+        },
+        () => {
+            // User cancelled - do nothing
+        }
+    );
 }
+
 
 async function loadEditExpense() {
     const session = await checkSession();

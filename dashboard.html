@@ -56,10 +56,8 @@
     <script src="assets/js/script.js"></script>
     <script src="assets/js/app.js"></script>
     <script>
-        // Initialize dashboard on page load
         document.addEventListener('DOMContentLoaded', () => {
             loadDashboard();
-            // Set today's date as default
             const dateInput = document.querySelector('input[name="date"]');
             if (dateInput) {
                 dateInput.value = new Date().toISOString().split('T')[0];
