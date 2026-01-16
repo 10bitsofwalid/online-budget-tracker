@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,5 +24,9 @@
     "cookie": "^1.1.1",
     "cookie-session": "^2.1.1",
     "mongodb": "^7.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
   }
 }

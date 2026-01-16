@@ -1,4 +1,4 @@
-const API_BASE = 'api';
+const API_BASE = '/api';
 
 function showModal(title, message, onConfirm, onCancel = null) {
     const existingModal = document.querySelector('.modal-overlay');
@@ -70,7 +70,7 @@ function showToast(message, type = 'info', duration = 3000) {
 
 async function checkSession() {
     try {
-        const res = await fetch(`${API_BASE}/auth.php?action=check`);
+        const res = await fetch(`${API_BASE}/auth?action=check`);
         const data = await res.json();
         return data;
     } catch (e) {
@@ -79,7 +79,7 @@ async function checkSession() {
 }
 
 async function login(email, password) {
-    const res = await fetch(`${API_BASE}/auth.php?action=login`, {
+    const res = await fetch(`${API_BASE}/auth?action=login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -88,7 +88,7 @@ async function login(email, password) {
 }
 
 async function register(name, email, password) {
-    const res = await fetch(`${API_BASE}/auth.php?action=register`, {
+    const res = await fetch(`${API_BASE}/auth?action=register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password })
@@ -97,11 +97,10 @@ async function register(name, email, password) {
 }
 
 async function logout() {
-    await fetch(`${API_BASE}/auth.php?action=logout`, { method: 'POST' });
+    await fetch(`${API_BASE}/auth?action=logout`, { method: 'POST' });
     window.location.href = 'login.html';
 }
 
-// Dashboard Functions
 async function loadDashboard() {
     const session = await checkSession();
     if (!session.loggedIn) {
@@ -111,7 +110,7 @@ async function loadDashboard() {
     document.getElementById('welcome-msg').textContent = `Welcome, ${session.user.name}!`;
 
     try {
-        const res = await fetch(`${API_BASE}/expenses.php`);
+        const res = await fetch(`${API_BASE}/expenses`);
         const expenses = await res.json();
         renderExpenses(expenses);
     } catch (e) {
@@ -121,12 +120,6 @@ async function loadDashboard() {
 
 function renderExpenses(expenses) {
     const tbody = document.querySelector('table tbody');
-    // Keep header row if it exists or clear all? 
-    // Usually table has <thead> but here it seems it was all in <table>. 
-    // Let's assume standard <table> structure or just find the table.
-    // The previous code had <tr><th>...</th></tr> then loop.
-
-    // We'll reconstruct the table content.
     const table = document.querySelector('table');
     table.innerHTML = `
         <tr>
@@ -165,7 +158,6 @@ function renderExpenses(expenses) {
 
     document.getElementById('total-expense').textContent = `Total expense: ${total} tk`;
 
-    // Render Monthly Breakdown
     const breakdownList = document.getElementById('monthly-breakdown');
     if (breakdownList) {
         breakdownList.innerHTML = ''; // clear
@@ -181,7 +173,6 @@ function renderExpenses(expenses) {
         }
     }
 
-    // Chart
     renderChart(categories);
 }
 
@@ -241,7 +232,7 @@ async function addExpense(e) {
         date: form.date.value
     };
 
-    const res = await fetch(`${API_BASE}/expenses.php`, {
+    const res = await fetch(`${API_BASE}/expenses`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -249,8 +240,8 @@ async function addExpense(e) {
 
     if (res.ok) {
         form.reset();
-        form.date.value = new Date().toISOString().split('T')[0]; // reset date to today
-        loadDashboard(); // reload data
+        form.date.value = new Date().toISOString().split('T')[0];
+        loadDashboard();
     } else {
         alert('Failed to add expense');
     }
@@ -261,8 +252,7 @@ async function deleteExpense(id) {
         'Delete Expense',
         'Are you sure you want to delete this expense?',
         async () => {
-            // User confirmed
-            const res = await fetch(`${API_BASE}/expenses.php?id=${id}`, { method: 'DELETE' });
+            const res = await fetch(`${API_BASE}/expenses?id=${id}`, { method: 'DELETE' });
             if (res.ok) {
                 showToast('Expense deleted successfully', 'success');
                 loadDashboard();
@@ -271,7 +261,6 @@ async function deleteExpense(id) {
             }
         },
         () => {
-            // User cancelled - do nothing
         }
     );
 }
@@ -291,7 +280,7 @@ async function loadEditExpense() {
         return;
     }
 
-    const res = await fetch(`${API_BASE}/expenses.php?id=${id}`);
+    const res = await fetch(`${API_BASE}/expenses?id=${id}`);
     if (res.ok) {
         const expense = await res.json();
         const form = document.getElementById('edit-form');
@@ -314,10 +303,10 @@ async function handleEditSubmit(e) {
         title: form.title.value,
         amount: form.amount.value,
         category: form.category.value,
-        date: form.date.value // assuming we add date field to edit form too, if not it's ignored or we should add it
+        date: form.date.value
     };
 
-    const res = await fetch(`${API_BASE}/expenses.php?id=${id}`, {
+    const res = await fetch(`${API_BASE}/expenses?id=${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
