@@ -1,0 +1,1 @@
+console.log("Budget Tracker initialized");
