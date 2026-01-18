@@ -3,9 +3,12 @@ import bcrypt from 'bcryptjs';
 import { serialize } from 'cookie';
 
 export const handler = async (event, context) => {
+    console.log('Auth function called', event.httpMethod, event.queryStringParameters);
     try {
         const { action } = event.queryStringParameters || {};
+        console.log('Action:', action);
         const client = await clientPromise;
+        console.log('MongoDB connected');
         const db = client.db(process.env.DB_NAME || 'budget_tracker');
         const users = db.collection('users');
 
@@ -13,7 +16,9 @@ export const handler = async (event, context) => {
             let body;
             try {
                 body = JSON.parse(event.body || '{}');
+                console.log('Body parsed:', body);
             } catch (e) {
+                console.log('JSON parse error:', e.message);
                 return {
                     statusCode: 400,
                     headers: { 'Content-Type': 'application/json' },
@@ -21,43 +26,12 @@ export const handler = async (event, context) => {
                 };
             }
 
-            if (action === 'login') {
-                const { email, password } = body;
-                const user = await users.findOne({ email });
-
-                if (user && await bcrypt.compare(password, user.password)) {
-                    const sessionData = JSON.stringify({
-                        user_id: user._id.toString(),
-                        name: user.name
-                    });
-
-                    const cookie = serialize('session', sessionData, {
-                        path: '/',
-                        httpOnly: true,
-                        sameSite: 'lax',
-                        maxAge: 60 * 60 * 24 * 7 // 1 week
-                    });
-
-                    return {
-                        statusCode: 200,
-                        headers: {
-                            'Set-Cookie': cookie,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ success: true })
-                    };
-                }
-                return {
-                    statusCode: 401,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ success: false, error: 'Invalid credentials' })
-                };
-            }
-
             if (action === 'register') {
+                console.log('Registering user:', body.email);
                 try {
                     const { name, email, password } = body;
                     const existing = await users.findOne({ email });
+                    console.log('Existing user:', !!existing);
 
                     if (existing) {
                         return {
@@ -68,11 +42,13 @@ export const handler = async (event, context) => {
                     }
 
                     const hashedPassword = await bcrypt.hash(password, 10);
+                    console.log('Password hashed');
                     await users.insertOne({
                         name,
                         email,
                         password: hashedPassword
                     });
+                    console.log('User inserted');
 
                     return {
                         statusCode: 200,
@@ -80,63 +56,13 @@ export const handler = async (event, context) => {
                         body: JSON.stringify({ success: true })
                     };
                 } catch (error) {
+                    console.log('Registration error:', error.message);
                     return {
                         statusCode: 500,
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ error: 'Registration failed: ' + error.message })
                     };
                 }
-            }
-
-            if (action === 'logout') {
-                const cookie = serialize('session', '', {
-                    path: '/',
-                    maxAge: -1
-                });
-
-                return {
-                    statusCode: 200,
-                    headers: {
-                        'Set-Cookie': cookie,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ success: true })
-                };
-            }
-        }
-
-        if (event.httpMethod === 'GET') {
-            if (action === 'check') {
-                const cookies = event.headers.cookie || '';
-                const sessionMatch = cookies.match(/session=([^;]+)/);
-
-                if (sessionMatch) {
-                    try {
-                        const session = JSON.parse(decodeURIComponent(sessionMatch[1]));
-                        return {
-                            statusCode: 200,
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                loggedIn: true,
-                                user: {
-                                    id: session.user_id,
-                                    name: session.name
-                                }
-                            })
-                        };
-                    } catch (e) {
-                        return {
-                            statusCode: 200,
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ loggedIn: false })
-                        };
-                    }
-                }
-                return {
-                    statusCode: 200,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ loggedIn: false })
-                };
             }
         }
 
@@ -146,6 +72,7 @@ export const handler = async (event, context) => {
             body: JSON.stringify({ error: 'Not found' })
         };
     } catch (error) {
+        console.log('Handler error:', error.message);
         return {
             statusCode: 500,
             headers: { 'Content-Type': 'application/json' },
