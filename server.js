@@ -15,6 +15,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.all('/api/:file', async (req, res) => {
+    if (process.env.VERCEL) return; // Let Vercel handle this naturally
     const fileName = req.params.file;
     const filePath = path.join(__dirname, 'api', `${fileName}.js`);
 
