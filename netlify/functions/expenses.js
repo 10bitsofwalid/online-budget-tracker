@@ -67,7 +67,16 @@ export const handler = async (event, context) => {
         }
 
         if (event.httpMethod === 'POST') {
-            const body = JSON.parse(event.body || '{}');
+            let body;
+            try {
+                body = JSON.parse(event.body || '{}');
+            } catch (e) {
+                return {
+                    statusCode: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ error: 'Invalid JSON' })
+                };
+            }
             const { title, amount, category, date } = body;
             if (!title || !amount || !category) {
                 return {
@@ -102,7 +111,16 @@ export const handler = async (event, context) => {
                 };
             }
 
-            const body = JSON.parse(event.body || '{}');
+            let body;
+            try {
+                body = JSON.parse(event.body || '{}');
+            } catch (e) {
+                return {
+                    statusCode: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ error: 'Invalid JSON' })
+                };
+            }
             const { title, amount, category, date } = body;
             try {
                 const result = await expenses.updateOne(

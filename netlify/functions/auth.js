@@ -10,7 +10,16 @@ export const handler = async (event, context) => {
         const users = db.collection('users');
 
         if (event.httpMethod === 'POST') {
-            const body = JSON.parse(event.body || '{}');
+            let body;
+            try {
+                body = JSON.parse(event.body || '{}');
+            } catch (e) {
+                return {
+                    statusCode: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ error: 'Invalid JSON' })
+                };
+            }
 
             if (action === 'login') {
                 const { email, password } = body;
