@@ -10,8 +10,6 @@
     <div class="page-container">
         <h2>Login</h2>
 
-        <div id="error-message" class="alert" style="display: none;"></div>
-
         <form id="login-form">
             <input type="email" id="email" name="email" placeholder="Email" required>
             <input type="password" id="password" name="password" placeholder="Password" required>
@@ -34,24 +32,7 @@
             if (res.ok) {
                 window.location.href = 'dashboard.html';
             } else {
-                let errorMessage = 'Login failed';
-                try {
-                    const data = await res.json();
-                    if (data.message) {
-                        errorMessage = `${data.error || 'Error'}: ${data.message}`;
-                    } else if (typeof data.error === 'string') {
-                        errorMessage = data.error;
-                    }
-
-                    if (data.tip) {
-                        errorMessage += `\n\nTip: ${data.tip}`;
-                    }
-                } catch (e) {
-                    errorMessage = `Error: ${res.status} ${res.statusText}`;
-                }
-                const errorDiv = document.getElementById('error-message');
-                errorDiv.textContent = errorMessage;
-                errorDiv.style.display = 'block';
+                showToast('Login failed. Please check your credentials.', 'error');
             }
         });
     </script>

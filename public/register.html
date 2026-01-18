@@ -10,8 +10,6 @@
     <div class="page-container">
         <h2>Register</h2>
 
-        <div id="error-message" class="alert" style="display: none;"></div>
-
         <form id="register-form">
             <input type="text" id="name" name="name" placeholder="Name" required>
             <input type="email" id="email" name="email" placeholder="Email" required>
@@ -34,29 +32,12 @@
             const password = document.getElementById('password').value;
             const res = await register(name, email, password);
             if (res.ok) {
-                showToast('Registration successful! Redirecting to login...', 'success');
+                showToast('Registration successful! Redirecting...', 'success');
                 setTimeout(() => {
                     window.location.href = 'login.html';
                 }, 1500);
             } else {
-                let errorMessage = 'Registration failed';
-                try {
-                    const data = await res.json();
-                    if (data.message) {
-                        errorMessage = `${data.error || 'Error'}: ${data.message}`;
-                    } else if (typeof data.error === 'string') {
-                        errorMessage = data.error;
-                    }
-
-                    if (data.tip) {
-                        errorMessage += `\n\nTip: ${data.tip}`;
-                    }
-                } catch (e) {
-                    errorMessage = `Error: ${res.status} ${res.statusText}`;
-                }
-                const errorDiv = document.getElementById('error-message');
-                errorDiv.textContent = errorMessage;
-                errorDiv.style.display = 'block';
+                showToast('Registration failed. Email might exist.', 'error');
             }
         });
     </script>

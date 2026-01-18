@@ -1,10 +1,8 @@
 import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGO_URI;
-console.log('Connecting to MongoDB...');
 if (!uri) {
-    console.error('MONGO_URI is missing from environment variables!');
-    throw new Error('Please add your Mongo URI to Vercel Environment Variables');
+    throw new Error('MONGO_URI missing');
 }
 
 let client;
@@ -17,15 +15,11 @@ if (process.env.NODE_ENV === 'development') {
     }
     clientPromise = global._mongoClientPromise;
 } else {
-    // Adding serverSelectionTimeoutMS to help detect connection issues faster on Vercel
     client = new MongoClient(uri, {
         serverSelectionTimeoutMS: 5000,
         connectTimeoutMS: 5000
     });
-    clientPromise = client.connect().catch(err => {
-        console.error('MongoDB connection error:', err);
-        throw err;
-    });
+    clientPromise = client.connect();
 }
 
 export default clientPromise;

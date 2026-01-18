@@ -3,17 +3,13 @@ import bcrypt from 'bcryptjs';
 import { serialize } from 'cookie';
 
 export default async function handler(req, res) {
-    console.log(`Auth handler triggered: ${req.method} ${req.query.action}`);
     const { action } = req.query;
     let client;
     try {
         client = await clientPromise;
     } catch (dbError) {
-        console.error('Database connection failed in auth.js:', dbError);
         return res.status(500).json({
-            error: 'Database connection failed',
-            message: dbError.message,
-            tip: 'Check your MongoDB Atlas "Network Access" and ensure Vercel can connect.'
+            error: 'Connection failed'
         });
     }
     const db = client.db(process.env.DB_NAME || 'budget_tracker');
@@ -36,7 +32,7 @@ export default async function handler(req, res) {
                     path: '/',
                     httpOnly: true,
                     sameSite: 'lax',
-                    maxAge: 60 * 60 * 24 * 7 // 1 week
+                    maxAge: 60 * 60 * 24 * 7
                 }));
 
                 return res.status(200).json({ success: true });
@@ -49,7 +45,7 @@ export default async function handler(req, res) {
             const existing = await users.findOne({ email });
 
             if (existing) {
-                return res.status(400).json({ success: false, error: 'Email already exists' });
+                return res.status(400).json({ success: false, error: 'Email exists' });
             }
 
             const hashedPassword = await bcrypt.hash(password, 10);

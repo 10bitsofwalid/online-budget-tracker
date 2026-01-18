@@ -67,7 +67,6 @@ function showToast(message, type = 'info', duration = 3000) {
     }, duration);
 }
 
-
 async function checkSession() {
     try {
         const res = await fetch(`${API_BASE}/auth?action=check`);
@@ -114,12 +113,10 @@ async function loadDashboard() {
         const expenses = await res.json();
         renderExpenses(expenses);
     } catch (e) {
-        console.error('Failed to load expenses');
     }
 }
 
 function renderExpenses(expenses) {
-    const tbody = document.querySelector('table tbody');
     const table = document.querySelector('table');
     table.innerHTML = `
         <tr>
@@ -160,7 +157,7 @@ function renderExpenses(expenses) {
 
     const breakdownList = document.getElementById('monthly-breakdown');
     if (breakdownList) {
-        breakdownList.innerHTML = ''; // clear
+        breakdownList.innerHTML = '';
         if (Object.keys(monthlyTotal).length > 0) {
             Object.entries(monthlyTotal).forEach(([m, amt]) => {
                 const li = document.createElement('li');
@@ -243,7 +240,7 @@ async function addExpense(e) {
         form.date.value = new Date().toISOString().split('T')[0];
         loadDashboard();
     } else {
-        alert('Failed to add expense');
+        showToast('Failed to add', 'error');
     }
 }
 
@@ -254,17 +251,16 @@ async function deleteExpense(id) {
         async () => {
             const res = await fetch(`${API_BASE}/expenses?id=${id}`, { method: 'DELETE' });
             if (res.ok) {
-                showToast('Expense deleted successfully', 'success');
+                showToast('Deleted successfully', 'success');
                 loadDashboard();
             } else {
-                showToast('Failed to delete expense', 'error');
+                showToast('Failed to delete', 'error');
             }
         },
         () => {
         }
     );
 }
-
 
 async function loadEditExpense() {
     const session = await checkSession();
@@ -290,7 +286,6 @@ async function loadEditExpense() {
         form.date.value = expense.date || '';
         form.setAttribute('data-id', id);
     } else {
-        alert('Expense not found');
         window.location.href = 'dashboard.html';
     }
 }
@@ -315,6 +310,6 @@ async function handleEditSubmit(e) {
     if (res.ok) {
         window.location.href = 'dashboard.html';
     } else {
-        alert('Failed to update');
+        showToast('Update failed', 'error');
     }
 }

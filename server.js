@@ -16,10 +16,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.all('/api/:file', async (req, res) => {
     if (process.env.VERCEL) {
-        return res.status(404).json({ error: 'Vercel should use native routing for /api. Check rewrites in vercel.json' });
+        return res.status(404).json({ error: 'Not found' });
     }
     const fileName = req.params.file;
-    const filePath = path.join(__dirname, 'api', `${fileName}.js`);
 
     try {
         const module = await import(`./api/${fileName}.js`);
@@ -27,22 +26,18 @@ app.all('/api/:file', async (req, res) => {
         if (typeof handler === 'function') {
             await handler(req, res);
         } else {
-            res.status(500).json({ error: `API handler in ${fileName}.js not found or not a function` });
+            res.status(500).json({ error: 'Handler error' });
         }
     } catch (error) {
-        console.error(`Error handling API request for ${fileName}:`, error);
         res.status(500).json({
-            error: 'API execution failed',
-            message: error.message,
-            tip: 'If this is on Vercel, make sure you have set your MONGO_URI in Environment Variables.'
+            error: 'Execution failed'
         });
     }
 });
 
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
     app.listen(port, () => {
-        console.log(`\n> Local server running at http://localhost:${port}`);
-        console.log(`> Please stop your PHP server and use this instead.\n`);
+        console.log(`> Server: http://localhost:${port}`);
     });
 }
 

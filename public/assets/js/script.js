@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-
     const themeKey = 'budget_tracker_theme';
     const html = document.documentElement;
 
@@ -29,15 +28,6 @@ document.addEventListener('DOMContentLoaded', function () {
         applyTheme(currentTheme);
     });
 
-    const deleteButtons = document.querySelectorAll('.btn-delete');
-    deleteButtons.forEach(btn => {
-        btn.addEventListener('click', function (e) {
-            if (!confirm('Are you sure you want to delete this expense?')) {
-                e.preventDefault();
-            }
-        });
-    });
-
     const canvas = document.createElement('canvas');
     canvas.id = 'bg-canvas';
     document.body.prepend(canvas);
@@ -59,13 +49,13 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('mousemove', (e) => {
         mouse.x = e.x;
         mouse.y = e.y;
-
         updateParallax(e.x, e.y);
     });
     window.addEventListener('mouseout', () => {
         mouse.x = null;
         mouse.y = null;
     });
+
     function updateParallax(mx, my) {
         const decorations = document.querySelectorAll('.decor-item');
         decorations.forEach((decor, index) => {
@@ -75,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
             decor.style.transform = `translate(${x}px, ${y}px)`;
         });
     }
+
     class Particle {
         constructor() {
             this.x = Math.random() * width;
