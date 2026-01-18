@@ -15,7 +15,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.all('/api/:file', async (req, res) => {
-    if (process.env.VERCEL) return; // Let Vercel handle this naturally
+    if (process.env.VERCEL) {
+        return res.status(404).json({ error: 'Vercel should use native routing for /api. Check rewrites in vercel.json' });
+    }
     const fileName = req.params.file;
     const filePath = path.join(__dirname, 'api', `${fileName}.js`);
 
