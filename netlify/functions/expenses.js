@@ -1,4 +1,4 @@
-import clientPromise from '../api/_db.js';
+import clientPromise from './_db.js';
 import { ObjectId } from 'mongodb';
 
 export const handler = async (event, context) => {

@@ -1,4 +1,4 @@
-import clientPromise from '../api/_db.js';
+import clientPromise from './_db.js';
 import bcrypt from 'bcryptjs';
 import { serialize } from 'cookie';
 
