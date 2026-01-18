@@ -19,16 +19,20 @@ app.all('/api/:file', async (req, res) => {
     const filePath = path.join(__dirname, 'api', `${fileName}.js`);
 
     try {
-        const module = await import(`file://${filePath}`);
+        const module = await import(`./api/${fileName}.js`);
         const handler = module.default;
         if (typeof handler === 'function') {
             await handler(req, res);
         } else {
-            res.status(500).json({ error: 'API handler not found or not a function' });
+            res.status(500).json({ error: `API handler in ${fileName}.js not found or not a function` });
         }
     } catch (error) {
-        console.error(`Error loading API handler ${fileName}:`, error);
-        res.status(404).json({ error: 'API endpoint not found' });
+        console.error(`Error handling API request for ${fileName}:`, error);
+        res.status(500).json({
+            error: 'API execution failed',
+            message: error.message,
+            tip: 'If this is on Vercel, make sure you have set your MONGO_URI in Environment Variables.'
+        });
     }
 });
 
