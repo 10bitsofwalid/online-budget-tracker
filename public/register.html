@@ -42,12 +42,14 @@
                 let errorMessage = 'Registration failed';
                 try {
                     const data = await res.json();
-                    if (typeof data.error === 'string') {
+                    if (data.message) {
+                        errorMessage = `${data.error || 'Error'}: ${data.message}`;
+                    } else if (typeof data.error === 'string') {
                         errorMessage = data.error;
-                    } else if (typeof data.message === 'string') {
-                        errorMessage = data.message;
-                    } else if (data.error && typeof data.error === 'object') {
-                        errorMessage = JSON.stringify(data.error);
+                    }
+
+                    if (data.tip) {
+                        errorMessage += `\n\nTip: ${data.tip}`;
                     }
                 } catch (e) {
                     errorMessage = `Error: ${res.status} ${res.statusText}`;
