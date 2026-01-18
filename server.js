@@ -32,7 +32,11 @@ app.all('/api/:file', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`\n> Local server running at http://localhost:${port}`);
-    console.log(`> Please stop your PHP server and use this instead.\n`);
-});
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+    app.listen(port, () => {
+        console.log(`\n> Local server running at http://localhost:${port}`);
+        console.log(`> Please stop your PHP server and use this instead.\n`);
+    });
+}
+
+export default app;
