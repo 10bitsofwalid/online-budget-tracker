@@ -1,4 +1,4 @@
-const API_BASE = '/api';
+const API_BASE = '/.netlify/functions';
 
 function showModal(title, message, onConfirm, onCancel = null) {
     const existingModal = document.querySelector('.modal-overlay');
